@@ -1,3 +1,3 @@
 /// Rusty nets - Fast and Reliable Network Embedding
 
-mod load;
+pub mod network;
