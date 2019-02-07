@@ -1,0 +1,7 @@
+[package]
+name = "rusty-nets"
+version = "0.0.1"
+authors = ["pbielak"]
+edition = "2018"
+
+[dependencies]
