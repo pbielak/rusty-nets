@@ -7,7 +7,11 @@ use petgraph::Graph;
 use petgraph::graph::{EdgeIndex, NodeIndex};
 
 
-pub struct Network<N, E> {
+#[derive(Default)]
+pub struct Network<N, E>
+    where N: Eq + Hash + Copy,
+          E: Eq + Hash + Copy
+{
     graph: Graph<N, E>,
     nodes: HashMap<N, NodeIndex<u32>>,
     edges: HashMap<(N, N), EdgeIndex<u32>>,
