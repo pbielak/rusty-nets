@@ -3,23 +3,24 @@ use std::cmp::Eq;
 use std::collections::HashMap;
 use std::hash::Hash;
 
-use petgraph::Graph;
 use petgraph::graph::{EdgeIndex, NodeIndex};
-
+use petgraph::Graph;
 
 #[derive(Default)]
 pub struct Network<N, E>
-    where N: Eq + Hash + Copy,
-          E: Eq + Hash + Copy
+where
+    N: Eq + Hash + Copy,
+    E: Eq + Hash + Copy,
 {
     graph: Graph<N, E>,
     nodes: HashMap<N, NodeIndex<u32>>,
     edges: HashMap<(N, N), EdgeIndex<u32>>,
 }
 
-impl <N, E> Network<N, E>
-    where N: Eq + Hash + Copy,
-          E: Eq + Hash + Copy
+impl<N, E> Network<N, E>
+where
+    N: Eq + Hash + Copy,
+    E: Eq + Hash + Copy,
 {
     pub fn new() -> Network<N, E> {
         Network {
@@ -47,11 +48,11 @@ impl <N, E> Network<N, E>
             None => {
                 let from_nx = match self.nodes.get(&from) {
                     Some(from_nx) => *from_nx,
-                    None => self.add_node(from)
+                    None => self.add_node(from),
                 };
                 let to_nx = match self.nodes.get(&to) {
                     Some(to_nx) => *to_nx,
-                    None => self.add_node(to)
+                    None => self.add_node(to),
                 };
 
                 let ex = self.graph.add_edge(from_nx, to_nx, edge_data);
@@ -65,11 +66,10 @@ impl <N, E> Network<N, E>
     pub fn get_edge_data(&self, from: N, to: N) -> Option<&E> {
         match self.edges.get(&(from, to)) {
             Some(ex) => self.graph.edge_weight(*ex),
-            None => None
+            None => None,
         }
     }
 }
-
 
 #[cfg(test)]
 #[path = "../tests/unit/network_tests.rs"]
