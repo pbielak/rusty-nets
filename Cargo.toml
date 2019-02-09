@@ -1,8 +1,13 @@
 [package]
-name = "rusty-nets"
+name = "rusty_nets"
 version = "0.0.1"
 authors = ["pbielak"]
 edition = "2018"
+
+[lib]
+name = "rusty_nets"
+path = "src/lib.rs"
+
 
 [dependencies]
 petgraph = "0.4.13"
