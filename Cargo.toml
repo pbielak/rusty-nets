@@ -8,6 +8,12 @@ edition = "2018"
 name = "rusty_nets"
 path = "src/lib.rs"
 
-
 [dependencies]
 petgraph = "0.4.13"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "fb-forum-read"
+harness = false
