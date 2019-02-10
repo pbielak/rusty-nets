@@ -1,27 +1,24 @@
 /// Network data structure
 use std::cmp::Eq;
 use std::collections::HashMap;
+use std::default::Default;
 use std::hash::Hash;
 
 use petgraph::graph::{EdgeIndex, NodeIndex};
 use petgraph::Graph;
 
-#[derive(Default)]
-pub struct Network<N, E>
-where
-    N: Eq + Hash + Copy,
-    E: Eq + Hash + Copy,
-{
+pub trait NetworkNode: Eq + Hash + Copy + Default {}
+
+impl<T> NetworkNode for T where T: Eq + Hash + Copy + Default {}
+
+#[derive(Debug, Default)]
+pub struct Network<N: NetworkNode, E> {
     graph: Graph<N, E>,
     nodes: HashMap<N, NodeIndex<u32>>,
     edges: HashMap<(N, N), EdgeIndex<u32>>,
 }
 
-impl<N, E> Network<N, E>
-where
-    N: Eq + Hash + Copy,
-    E: Eq + Hash + Copy,
-{
+impl<N: NetworkNode, E> Network<N, E> {
     pub fn new() -> Network<N, E> {
         Network {
             graph: Graph::new(),
