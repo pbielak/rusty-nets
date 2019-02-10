@@ -10,7 +10,7 @@ use crate::network::*;
 #[derive(Debug, PartialEq)]
 pub enum Error {
     FileNotFound,
-    MalformedFileFormat,
+    MalformedFileFormat(String),
 }
 
 impl From<io::Error> for Error {
@@ -24,13 +24,13 @@ impl From<io::Error> for Error {
 
 impl From<num::ParseIntError> for Error {
     fn from(_: num::ParseIntError) -> Self {
-        Error::MalformedFileFormat
+        Error::MalformedFileFormat("Couldn't parse int".to_string())
     }
 }
 
 impl From<num::ParseFloatError> for Error {
     fn from(_: num::ParseFloatError) -> Self {
-        Error::MalformedFileFormat
+        Error::MalformedFileFormat("Couldn't parse float".to_string())
     }
 }
 
@@ -64,6 +64,12 @@ impl NetworkReader for EdgeListReader {
         for line in reader.lines() {
             let edge_raw: String = line?;
             let edge: Vec<&str> = edge_raw.split(self.separator).collect();
+
+            if edge.len() < 3 {
+                return Err(Error::MalformedFileFormat(
+                    "Not enough elements".to_string(),
+                ));
+            }
 
             let from_node: usize = edge[0].parse()?;
             let to_node: usize = edge[1].parse()?;

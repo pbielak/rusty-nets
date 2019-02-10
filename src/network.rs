@@ -60,11 +60,27 @@ impl<N: NetworkNode, E> Network<N, E> {
         }
     }
 
-    pub fn get_edge_data(&self, from: N, to: N) -> Option<&E> {
+    pub fn edge_data(&self, from: N, to: N) -> Option<&E> {
         match self.edges.get(&(from, to)) {
             Some(ex) => self.graph.edge_weight(*ex),
             None => None,
         }
+    }
+
+    pub fn num_nodes(&self) -> usize {
+        self.graph.node_count()
+    }
+
+    pub fn num_edges(&self) -> usize {
+        self.graph.edge_count()
+    }
+
+    pub fn nodes(&self) -> Vec<&N> {
+        self.nodes.keys().collect()
+    }
+
+    pub fn edges(&self) -> Vec<&(N, N)> {
+        self.edges.keys().collect()
     }
 }
 
