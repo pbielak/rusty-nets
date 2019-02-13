@@ -85,5 +85,5 @@ impl<N: NetworkNode, E> Network<N, E> {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/network_tests.rs"]
-mod network_tests;
+#[path = "../../tests/unit/network/model_tests.rs"]
+mod model_tests;

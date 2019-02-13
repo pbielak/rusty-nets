@@ -83,5 +83,5 @@ impl NetworkReader for EdgeListReader {
 }
 
 #[cfg(test)]
-#[path = "../../tests/unit/reader_tests.rs"]
+#[path = "../../tests/unit/network/reader_tests.rs"]
 mod reader_tests;
