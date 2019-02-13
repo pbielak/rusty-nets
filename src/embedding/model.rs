@@ -67,5 +67,5 @@ impl<K: EmbeddingKey> Embedding<K> {
 }
 
 #[cfg(test)]
-#[path = "../tests/unit/embedding_tests.rs"]
+#[path = "../../tests/unit/embedding_tests.rs"]
 mod embedding_tests;

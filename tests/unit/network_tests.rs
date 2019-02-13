@@ -1,5 +1,5 @@
 /// Unit tests for network data structure
-use crate::network::*;
+use crate::network::model::*;
 
 #[test]
 fn test_network_empty_on_beginning() {

@@ -1,5 +1,5 @@
 /// Unit tests for embedding data structure
-use crate::embedding::*;
+use crate::embedding::model::*;
 
 #[test]
 fn test_add_vector_wrong_dim() {

@@ -1,8 +1,8 @@
 /// Unit tests for network file reader
 use std::path::PathBuf;
 
-use crate::network::Network;
-use crate::reader::*;
+use crate::network::model::Network;
+use crate::network::reader::*;
 
 #[test]
 fn test_reading_non_existing_file() {

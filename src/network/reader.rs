@@ -5,7 +5,7 @@ use std::io::BufRead;
 use std::num;
 use std::path::PathBuf;
 
-use crate::network::*;
+use crate::network::model::*;
 
 #[derive(Debug, PartialEq)]
 pub enum ReaderError {
@@ -83,5 +83,5 @@ impl NetworkReader for EdgeListReader {
 }
 
 #[cfg(test)]
-#[path = "../tests/unit/reader_tests.rs"]
+#[path = "../../tests/unit/reader_tests.rs"]
 mod reader_tests;
