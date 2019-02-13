@@ -16,7 +16,7 @@ fn test_reading_non_existing_file() {
 #[test]
 fn test_reading_simple_file() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/simple-net.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/simple-net.txt".parse().unwrap();
 
     let res = reader.read(path);
     assert!(res.is_ok(), "Should read simple file");
@@ -53,7 +53,7 @@ fn test_reading_simple_file() {
 #[test]
 fn test_malformed_not_enough_elements() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/malformed-not-enough-elements.txt"
+    let path: PathBuf = "resources/nets/malformed-not-enough-elements.txt"
         .parse()
         .unwrap();
 
@@ -67,7 +67,7 @@ fn test_malformed_not_enough_elements() {
 #[test]
 fn test_malformed_int_parse_error() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/malformed-int-parse-error.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/malformed-int-parse-error.txt".parse().unwrap();
 
     let res = reader.read(path);
     assert_eq!(
@@ -79,7 +79,7 @@ fn test_malformed_int_parse_error() {
 #[test]
 fn test_malformed_float_parse_error() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/malformed-float-parse-error.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/malformed-float-parse-error.txt".parse().unwrap();
 
     let res = reader.read(path);
     assert_eq!(
@@ -91,7 +91,7 @@ fn test_malformed_float_parse_error() {
 #[test]
 fn test_fb_forum() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/fb-forum.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/fb-forum.txt".parse().unwrap();
 
     let res = reader.read(path);
     assert!(res.is_ok(), "Should read fb-forum");
