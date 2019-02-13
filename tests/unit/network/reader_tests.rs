@@ -67,7 +67,9 @@ fn test_malformed_not_enough_elements() {
 #[test]
 fn test_malformed_int_parse_error() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/nets/malformed-int-parse-error.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/malformed-int-parse-error.txt"
+        .parse()
+        .unwrap();
 
     let res = reader.read(path);
     assert_eq!(
@@ -79,7 +81,9 @@ fn test_malformed_int_parse_error() {
 #[test]
 fn test_malformed_float_parse_error() {
     let reader = EdgeListReader::new(',');
-    let path: PathBuf = "resources/nets/malformed-float-parse-error.txt".parse().unwrap();
+    let path: PathBuf = "resources/nets/malformed-float-parse-error.txt"
+        .parse()
+        .unwrap();
 
     let res = reader.read(path);
     assert_eq!(
