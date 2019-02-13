@@ -8,29 +8,29 @@ use std::path::PathBuf;
 use crate::network::*;
 
 #[derive(Debug, PartialEq)]
-pub enum Error {
+pub enum ReaderError {
     FileNotFound,
     MalformedFileFormat(String),
 }
 
-impl From<io::Error> for Error {
+impl From<io::Error> for ReaderError {
     fn from(e: io::Error) -> Self {
         match e.kind() {
-            io::ErrorKind::NotFound => Error::FileNotFound,
+            io::ErrorKind::NotFound => ReaderError::FileNotFound,
             _ => panic!(format!("Unknown error occurred: {:?}", e.kind())),
         }
     }
 }
 
-impl From<num::ParseIntError> for Error {
+impl From<num::ParseIntError> for ReaderError {
     fn from(_: num::ParseIntError) -> Self {
-        Error::MalformedFileFormat("Couldn't parse int".to_string())
+        ReaderError::MalformedFileFormat("Couldn't parse int".to_string())
     }
 }
 
-impl From<num::ParseFloatError> for Error {
+impl From<num::ParseFloatError> for ReaderError {
     fn from(_: num::ParseFloatError) -> Self {
-        Error::MalformedFileFormat("Couldn't parse float".to_string())
+        ReaderError::MalformedFileFormat("Couldn't parse float".to_string())
     }
 }
 
@@ -38,7 +38,7 @@ pub trait NetworkReader {
     type N: NetworkNode;
     type E;
 
-    fn read(&self, file: PathBuf) -> Result<Network<Self::N, Self::E>, Error>;
+    fn read(&self, file: PathBuf) -> Result<Network<Self::N, Self::E>, ReaderError>;
 }
 
 pub struct EdgeListReader {
@@ -55,7 +55,7 @@ impl NetworkReader for EdgeListReader {
     type N = usize;
     type E = f64;
 
-    fn read(&self, file: PathBuf) -> Result<Network<Self::N, Self::E>, Error> {
+    fn read(&self, file: PathBuf) -> Result<Network<Self::N, Self::E>, ReaderError> {
         let f = fs::File::open(file)?;
         let reader = io::BufReader::new(&f);
 
@@ -66,7 +66,7 @@ impl NetworkReader for EdgeListReader {
             let edge: Vec<&str> = edge_raw.split(self.separator).collect();
 
             if edge.len() < 3 {
-                return Err(Error::MalformedFileFormat(
+                return Err(ReaderError::MalformedFileFormat(
                     "Not enough elements".to_string(),
                 ));
             }

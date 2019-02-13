@@ -9,7 +9,7 @@ fn test_add_vector_wrong_dim() {
     let res = emb.add_vector("A", &[1.0, 2.0]);
     assert_eq!(
         res.unwrap_err(),
-        Error::WrongEmbeddingDimension("Expected: 3 Got: 2".to_string())
+        EmbeddingError::WrongEmbeddingDimension("Expected: 3 Got: 2".to_string())
     )
 }
 
@@ -33,7 +33,7 @@ fn test_get_non_existing_vector() {
     let vector = emb.get_vector("A");
     assert_eq!(
         vector.unwrap_err(),
-        Error::VectorNotFound("No vector found for \"A\"".to_string())
+        EmbeddingError::VectorNotFound("No vector found for \"A\"".to_string())
     );
 }
 

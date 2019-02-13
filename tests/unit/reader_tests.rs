@@ -10,7 +10,7 @@ fn test_reading_non_existing_file() {
     let path: PathBuf = "/tmp/non-existing-file.txt".parse().unwrap();
 
     let res = reader.read(path);
-    assert_eq!(res.unwrap_err(), Error::FileNotFound);
+    assert_eq!(res.unwrap_err(), ReaderError::FileNotFound);
 }
 
 #[test]
@@ -60,7 +60,7 @@ fn test_malformed_not_enough_elements() {
     let res = reader.read(path);
     assert_eq!(
         res.unwrap_err(),
-        Error::MalformedFileFormat("Not enough elements".to_string())
+        ReaderError::MalformedFileFormat("Not enough elements".to_string())
     );
 }
 
@@ -72,7 +72,7 @@ fn test_malformed_int_parse_error() {
     let res = reader.read(path);
     assert_eq!(
         res.unwrap_err(),
-        Error::MalformedFileFormat("Couldn't parse int".to_string())
+        ReaderError::MalformedFileFormat("Couldn't parse int".to_string())
     );
 }
 
@@ -84,7 +84,7 @@ fn test_malformed_float_parse_error() {
     let res = reader.read(path);
     assert_eq!(
         res.unwrap_err(),
-        Error::MalformedFileFormat("Couldn't parse float".to_string())
+        ReaderError::MalformedFileFormat("Couldn't parse float".to_string())
     );
 }
 

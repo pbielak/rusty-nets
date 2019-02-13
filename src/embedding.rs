@@ -8,7 +8,7 @@ use std::hash::Hash;
 use ndarray::prelude::*;
 
 #[derive(Debug, PartialEq)]
-pub enum Error {
+pub enum EmbeddingError {
     WrongEmbeddingDimension(String),
     VectorNotFound(String),
 }
@@ -31,11 +31,11 @@ impl<K: EmbeddingKey> Embedding<K> {
         }
     }
 
-    pub fn add_vector(&mut self, key: K, vector: &[f64]) -> Result<(), Error> {
+    pub fn add_vector(&mut self, key: K, vector: &[f64]) -> Result<(), EmbeddingError> {
         let vector: Array1<f64> = Array1::from_vec(Vec::from(vector));
 
         if vector.dim() != self.emb_dim {
-            return Err(Error::WrongEmbeddingDimension(format!(
+            return Err(EmbeddingError::WrongEmbeddingDimension(format!(
                 "Expected: {} Got: {}",
                 self.emb_dim,
                 vector.dim()
@@ -47,10 +47,10 @@ impl<K: EmbeddingKey> Embedding<K> {
         Ok(())
     }
 
-    pub fn get_vector(&self, key: K) -> Result<&[f64], Error> {
+    pub fn get_vector(&self, key: K) -> Result<&[f64], EmbeddingError> {
         match self.emb_vectors.get(&key) {
             Some(v) => Ok(v.as_slice().unwrap()),
-            None => Err(Error::VectorNotFound(format!(
+            None => Err(EmbeddingError::VectorNotFound(format!(
                 "No vector found for {:?}",
                 key
             ))),
