@@ -36,18 +36,22 @@ impl From<num::ParseFloatError> for ReaderError {
 
 pub trait NetworkReader {
     type N: NetworkNode;
-    type E;
+    type E: Copy;
 
     fn read(&self, file: PathBuf) -> Result<Network<Self::N, Self::E>, ReaderError>;
 }
 
 pub struct EdgeListReader {
     separator: char,
+    directed: bool,
 }
 
 impl EdgeListReader {
-    pub fn new(separator: char) -> EdgeListReader {
-        EdgeListReader { separator }
+    pub fn new(separator: char, directed: bool) -> EdgeListReader {
+        EdgeListReader {
+            separator,
+            directed,
+        }
     }
 }
 
@@ -59,7 +63,7 @@ impl NetworkReader for EdgeListReader {
         let f = fs::File::open(file)?;
         let reader = io::BufReader::new(&f);
 
-        let mut net = Network::new();
+        let mut net = Network::new(self.directed);
 
         for line in reader.lines() {
             let edge_raw: String = line?;

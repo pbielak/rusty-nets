@@ -1,97 +1,94 @@
 /// Unit tests for network data structure
 use crate::network::model::*;
 
+#[path = "../utils.rs"]
+mod utils;
+
+use crate::network::model::model_tests::utils::*;
+
 #[test]
 fn test_network_empty_on_beginning() {
-    let net: Network<&str, &str> = Network::new();
+    let net: Network<usize, f64> = Network::new(false);
 
-    assert_eq!(
-        net.num_nodes(),
-        0,
-        "Number of nodes in graph should be zero"
-    );
-    assert_eq!(
-        net.num_edges(),
-        0,
-        "Number of edges in graph should be zero"
-    );
+    check_network(net, 0, 0, vec![], vec![]);
 }
 
 #[test]
 fn test_node_inserted() {
-    let mut net: Network<&str, &str> = Network::new();
+    let mut net: Network<usize, f64> = Network::new(false);
 
-    net.add_node("A");
+    net.add_node(0);
 
-    assert_eq!(net.num_nodes(), 1, "Number of nodes in graph should be one");
-    assert_eq!(
-        net.num_edges(),
-        0,
-        "Number of edges in graph should be zero"
-    );
-    assert!(net.nodes().contains(&&"A"), "Should contain A node");
+    check_network(net, 1, 0, vec![0], vec![]);
 }
 
 #[test]
 fn test_multiple_node_insertion() {
-    let mut net: Network<&str, &str> = Network::new();
+    let mut net: Network<usize, f64> = Network::new(false);
 
-    net.add_node("A");
-    net.add_node("A");
+    net.add_node(0);
+    net.add_node(0);
 
-    assert_eq!(net.num_nodes(), 1, "Number of nodes in graph should be one");
-    assert_eq!(
-        net.num_edges(),
-        0,
-        "Number of edges in graph should be zero"
-    );
-    assert!(net.nodes().contains(&&"A"), "Should contain A node");
+    check_network(net, 1, 0, vec![0], vec![]);
 }
 
 #[test]
-fn test_edge_inserted() {
-    let mut net: Network<&str, usize> = Network::new();
+fn test_edge_inserted_directed() {
+    let mut net: Network<usize, f64> = Network::new(true);
 
-    net.add_node("A");
-    net.add_node("B");
+    net.add_node(0);
+    net.add_node(1);
 
-    net.add_edge("A", "B", 1);
+    net.add_edge(0, 1, 10.0);
 
-    assert_eq!(net.num_nodes(), 2, "Number of nodes in graph should be two");
-    assert_eq!(net.num_edges(), 1, "Number of edges in graph should be one");
-    assert!(net.nodes().contains(&&"A"), "Should contain A node");
-    assert!(net.nodes().contains(&&"B"), "Should contain B node");
-    assert!(
-        net.edges().contains(&&("A", "B")),
-        "Should contain A-B edge"
-    );
-
-    let weight = net.edge_data("A", "B").unwrap();
-    assert_eq!(*weight, 1, "Edge A-B should have weight 1");
+    check_network(net, 2, 1, vec![0, 1], vec![(0, 1, vec![&10.0])]);
 }
 
 #[test]
-fn test_edge_inserted_without_adding_nodes() {
-    let mut net: Network<&str, usize> = Network::new();
+fn test_edge_inserted_undirected() {
+    let mut net: Network<usize, f64> = Network::new(false);
 
-    net.add_edge("A", "B", 1);
+    net.add_node(0);
+    net.add_node(1);
 
-    assert_eq!(net.num_nodes(), 2, "Number of nodes in graph should be two");
-    assert_eq!(net.num_edges(), 1, "Number of edges in graph should be one");
-    assert!(net.nodes().contains(&&"A"), "Should contain A node");
-    assert!(net.nodes().contains(&&"B"), "Should contain B node");
-    assert!(
-        net.edges().contains(&&("A", "B")),
-        "Should contain A-B edge"
+    net.add_edge(0, 1, 10.0);
+
+    check_network(
+        net,
+        2,
+        1,
+        vec![0, 1],
+        vec![(0, 1, vec![&10.0]), (1, 0, vec![&10.0])],
     );
+}
 
-    let weight = net.edge_data("A", "B").unwrap();
-    assert_eq!(*weight, 1, "Edge A-B should have weight 1");
+#[test]
+fn test_edge_inserted_without_adding_nodes_directed() {
+    let mut net: Network<usize, f64> = Network::new(true);
+
+    net.add_edge(0, 1, 10.0);
+
+    check_network(net, 2, 1, vec![0, 1], vec![(0, 1, vec![&10.0])]);
+}
+
+#[test]
+fn test_edge_inserted_without_adding_nodes_undirected() {
+    let mut net: Network<usize, f64> = Network::new(false);
+
+    net.add_edge(0, 1, 10.0);
+
+    check_network(
+        net,
+        2,
+        1,
+        vec![0, 1],
+        vec![(0, 1, vec![&10.0]), (1, 0, vec![&10.0])],
+    );
 }
 
 #[test]
 fn test_edge_not_present() {
-    let net: Network<&str, usize> = Network::new();
+    let net: Network<&str, usize> = Network::new(false);
 
     assert!(
         net.edge_data("A", "B").is_none(),
@@ -100,13 +97,35 @@ fn test_edge_not_present() {
 }
 
 #[test]
-fn test_edge_present() {
-    let mut net: Network<&str, usize> = Network::new();
+fn test_edge_present_directed() {
+    let mut net: Network<&str, usize> = Network::new(true);
 
     net.add_edge("A", "B", 1);
 
     assert!(
         net.edge_data("A", "B").is_some(),
+        "There should be an edge between A and B"
+    );
+
+    assert!(
+        net.edge_data("B", "A").is_none(),
         "There should not be an edge between A and B"
+    );
+}
+
+#[test]
+fn test_edge_present_undirected() {
+    let mut net: Network<&str, usize> = Network::new(false);
+
+    net.add_edge("A", "B", 1);
+
+    assert!(
+        net.edge_data("A", "B").is_some(),
+        "There should be an edge between A and B"
+    );
+
+    assert!(
+        net.edge_data("B", "A").is_some(),
+        "There should be an edge between A and B"
     );
 }
