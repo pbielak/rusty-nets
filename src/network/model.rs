@@ -103,6 +103,25 @@ impl<N: NetworkNode, E: Copy> Network<N, E> {
     pub fn edges(&self) -> Vec<&(N, N)> {
         self.edges.keys().collect()
     }
+
+    pub fn neighbours_of(&self, node: N) -> Option<Vec<&N>> {
+        match self.nodes.get(&node) {
+            None => None,
+            Some(nx) => {
+                let mut edges = self.graph.neighbors(*nx).detach();
+                let mut neighbour_nodes: Vec<&N> = vec![];
+                while let Some(node) = edges.next_node(&self.graph) {
+                    neighbour_nodes.push(self.graph.node_weight(node).unwrap());
+                }
+
+                if neighbour_nodes.is_empty() {
+                    return None;
+                }
+
+                Some(neighbour_nodes)
+            }
+        }
+    }
 }
 
 #[cfg(test)]

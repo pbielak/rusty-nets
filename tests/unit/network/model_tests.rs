@@ -129,3 +129,91 @@ fn test_edge_present_undirected() {
         "There should be an edge between A and B"
     );
 }
+
+#[test]
+fn test_no_neighbours_empty() {
+    let net: Network<&str, f64> = Network::new(false);
+
+    assert!(
+        net.neighbours_of("A").is_none(),
+        "There should not be any neighbours in empty net."
+    )
+}
+
+#[test]
+fn test_no_neighbours_one_node() {
+    let mut net: Network<&str, f64> = Network::new(false);
+
+    net.add_node("A");
+
+    assert!(
+        net.neighbours_of("A").is_none(),
+        "There should not be any neighbours for single node."
+    )
+}
+
+#[test]
+fn test_neighbours_found_directed() {
+    let mut net: Network<&str, f64> = Network::new(true);
+
+    net.add_node("A");
+    net.add_node("B");
+    net.add_node("C");
+
+    net.add_edge("A", "B", 1.0);
+    net.add_edge("A", "C", 2.0);
+
+    let neighbours: Vec<&&str> = net.neighbours_of("A").unwrap();
+
+    assert_eq!(neighbours.len(), 2, "There should be two neighbours: B, C.");
+    assert!(neighbours.contains(&&"B"), "Should contain B node.");
+    assert!(neighbours.contains(&&"C"), "Should contain C node.");
+}
+
+#[test]
+fn test_neighbours_found_undirected() {
+    let mut net: Network<&str, f64> = Network::new(false);
+
+    net.add_node("A");
+    net.add_node("B");
+    net.add_node("C");
+
+    net.add_edge("A", "B", 1.0);
+    net.add_edge("A", "C", 2.0);
+
+    let neighbours: Vec<&&str> = net.neighbours_of("A").unwrap();
+
+    assert_eq!(neighbours.len(), 2, "There should be two neighbours: B, C.");
+    assert!(neighbours.contains(&&"B"), "Should contain B node.");
+    assert!(neighbours.contains(&&"C"), "Should contain C node.");
+}
+
+#[test]
+fn test_no_neighbours_dst_node_directed() {
+    let mut net: Network<&str, f64> = Network::new(true);
+
+    net.add_node("A");
+    net.add_node("B");
+
+    net.add_edge("A", "B", 1.0);
+
+    assert!(
+        net.neighbours_of("B").is_none(),
+        "There should not be any neighbours for dst node (if directed net)."
+    )
+}
+
+#[test]
+fn test_neighbours_found_dst_node_undirected() {
+    let mut net: Network<&str, f64> = Network::new(false);
+
+    net.add_node("A");
+    net.add_node("B");
+
+    net.add_edge("A", "B", 1.0);
+
+    let neighbours: Vec<&&str> = net.neighbours_of("B").unwrap();
+
+    assert_eq!(neighbours.len(), 1, "There should be one neighbour: A.");
+    assert!(neighbours.contains(&&"A"), "Should contain A node.");
+}

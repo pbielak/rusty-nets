@@ -11,6 +11,7 @@ path = "src/lib.rs"
 [dependencies]
 ndarray = "0.12.1"
 petgraph = "0.4.13"
+rand = "0.6.5"
 
 [dev-dependencies]
 criterion = "0.2"
